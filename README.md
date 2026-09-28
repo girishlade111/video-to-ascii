@@ -1,30 +1,71 @@
-# Video to ASCII
+# Video to ASCII Converter
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+A client-side web app that converts any video file into an **ASCII art animation** — rendered entirely in your browser with a retro terminal aesthetic. Drop in a video, tune the resolution and frame rate, and watch it play back as text.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/gileb64375-5584s-projects/v0-video-to-ascii)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/DCpNLC5zAGB)
+## What it does
 
-## Overview
+- Loads a local video file (drag-and-drop or file picker).
+- Decodes frames to an offscreen canvas and maps pixel brightness to ASCII characters, frame by frame, with a progress bar.
+- Plays back the result as a terminal-style ASCII animation inside a retro window frame.
+- Lets you adjust output **width** (columns) and **fps** before processing.
+- Supports exporting/copying the generated ASCII output.
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+## Features
+
+- Fully client-side — your video never leaves the browser; no uploads, no server
+- Retro terminal UI: terminal header, terminal frame chrome, monospace styling
+- Adjustable ASCII width and playback frame rate via sliders
+- Processing progress indicator for long videos
+- Responsive layout for desktop and mobile
+
+## Tech stack
+
+- **Framework:** Next.js 14.2 (App Router), React, TypeScript
+- **Styling:** Tailwind CSS, shadcn/ui (button, card, slider)
+- **Conversion engine:** HTMLCanvas 2D API for frame sampling + brightness-to-ASCII mapping
+- **Observability:** `@vercel/analytics`
+
+## Quick start
+
+Requirements: Node.js 18+.
+
+```bash
+npm install          # or: pnpm install
+npm run dev          # open http://localhost:3000
+```
+
+Production build (static export):
+
+```bash
+npm run build        # outputs to out/
+npx serve out        # or deploy the out/ directory to any static host
+```
+
+## Project structure
+
+```
+app/
+  page.tsx            # main page: file picker + drop zone + playback UI (client)
+  layout.tsx          # root layout, fonts, theme provider
+  globals.css         # Tailwind + custom terminal styling
+components/
+  video-to-ascii-converter.tsx   # frame decoding, ASCII mapping, playback
+  terminal-header.tsx            # retro top bar
+  terminal-frame.tsx             # terminal window chrome
+  ui/                            # shadcn/ui primitives (button, card, slider)
+lib/utils.ts          # class-name helpers
+public/               # static assets
+```
 
 ## Deployment
 
-Your project is live at:
+The app is fully static — no API routes, no server actions, no environment variables. `next.config.mjs` sets `output: 'export'`, so `npm run build` produces a deployable `out/` directory that works on GitHub Pages, Vercel, Netlify, or any static host.
 
-**[https://vercel.com/gileb64375-5584s-projects/v0-video-to-ascii](https://vercel.com/gileb64375-5584s-projects/v0-video-to-ascii)**
+**Note:** `basePath: '/video-to-ascii'` is set in `next.config.mjs` because this copy is deployed to GitHub Pages under the repo subpath. If you deploy to a root domain (e.g. Vercel), remove the `basePath` line.
 
-## Build your app
+## License
 
-Continue building your app on:
+Free to use and adapt.
 
-**[https://v0.app/chat/projects/DCpNLC5zAGB](https://v0.app/chat/projects/DCpNLC5zAGB)**
-
-## How It Works
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+---
+Built by Girish Lade · https://ladestack.in
